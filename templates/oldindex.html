@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Samochodów</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .red { background-color: #f8d7da; }
+        .orange { background-color: #fff3cd; }
+        .green { background-color: #d4edda; }
+    </style>
+</head>
+<body>
+    <h1>Moje pojazdy</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>AUTA</th>
+                <th>Data Ubezpieczenia</th>
+                <th>Data Przeglądu</th>
+                <th>Data Wymiany Oleju</th>
+                <th>Kilometry Wymiany Oleju</th>
+                <th>Aktualny Przebieg</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+            <tr>
+                <td>{{ car.nazwa_auta }}</td>
+                <td class="{{ get_color(car.data_ubezpieczenia) }}">{{ car.data_ubezpieczenia }}</td>
+                <td class="{{ get_color(car.data_przegladu) }}">{{ car.data_przegladu }}</td>
+                <td class="{{ get_color(car.data_wymiany_oleju) }}">{{ car.data_wymiany_oleju }}</td>
+                <td class="{{ get_mileage_color(car.kilometry_wymiany_oleju, car.aktualny_przebieg) }}">{{ car.kilometry_wymiany_oleju }}</td>
+                <td>{{ car.aktualny_przebieg }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

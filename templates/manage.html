@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzanie pojazdami</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="text-end mt-3" style="margin-right: 5%;">
+        <a>Logged as: {{current_user.username}}!</a>
+    </div>
+    <div class="container mt-5">
+        <h1 class="text-center">Zarządzanie pojazdami</h1>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" tabindex="-1">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+        <a href="/" class="btn btn-secondary mb-3">Powrót</a>
+        <a href="/logout" class="btn btn-danger mb-3">Logout</a>
+        <form method="POST" action="/add" class="mb-3">
+            <div class="mb-3">
+                <label for="nazwa_auta" class="form-label">Nazwa Auta</label>
+                <input type="text" class="form-control" id="nazwa_auta" name="nazwa_auta" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_ubezpieczenia" class="form-label">Data Ubezpieczenia</label>
+                <input type="date" class="form-control" id="data_ubezpieczenia" name="data_ubezpieczenia" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_przegladu" class="form-label">Data Przeglądu</label>
+                <input type="date" class="form-control" id="data_przegladu" name="data_przegladu" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_wymiany_oleju" class="form-label">Data Wymiany Oleju</label>
+                <input type="date" class="form-control" id="data_wymiany_oleju" name="data_wymiany_oleju" required>
+            </div>
+            <div class="mb-3">
+                <label for="kilometry_wymiany_oleju" class="form-label">Kilometry Wymiany Oleju</label>
+                <input type="number" class="form-control" id="kilometry_wymiany_oleju" name="kilometry_wymiany_oleju" required>
+            </div>
+            <div class="mb-3">
+                <label for="aktualny_przebieg" class="form-label">Aktualny Przebieg</label>
+                <input type="number" class="form-control" id="aktualny_przebieg" name="aktualny_przebieg" required>
+            </div>
+            <button type="submit" class="btn btn-success">Dodaj pojazd</button>
+        </form>
+        <a href="/register" class="btn btn-secondary mb-3">Dodaj Użytkownika</a>
+        <a href="/send_notification" class="btn btn-warning mb-3">Wyślij maila</a>
+        <h2>Istniejące pojazdy</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nazwa Auta</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car in cars %}
+                <tr>
+                    <td>{{ car.nazwa_auta }}</td>
+                    <td>
+                        <a href="/edit/{{ car.id }}" class="btn btn-warning btn-sm">Edytuj</a>
+                        <a href="/delete/{{ car.id }}" class="btn btn-danger btn-sm">Usuń</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
