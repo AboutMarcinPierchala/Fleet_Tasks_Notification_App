@@ -5,15 +5,20 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import smtplib
 import utylity
+from logevent import log_event
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from apscheduler.schedulers.background import BackgroundScheduler
 import re
 
+restart = True
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fleet_management.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key'
+if(restart):
+    log_event("Aplikacja zostala zrestartowana lub uruchomiona.")
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -108,9 +113,9 @@ def send_email(subject, message, mail_to):
             server.starttls()
             server.login(utylity.mail_from, utylity.mail_from_pass)
             server.send_message(msg)
-            print(f"Wysłano e-mail: {subject} na adres {mail_to}")
+            log_event(f"Wysłano e-mail: {subject} na adres {mail_to}")
     except Exception as e:
-        print(f"Błąd podczas wysyłania e-maila: {e}")
+        log_event(f"Błąd podczas wysyłania e-maila: {e}")
 
 def check_conditions_and_send_email(user_id: int=None):
     """Funkcja sprawdzająca warunki i wysyłająca odpowiednie maile."""
@@ -137,22 +142,22 @@ def check_conditions_and_send_email(user_id: int=None):
                                    (car.data_wymiany_oleju, "wymiany oleju")]:
                     if attr <= today + timedelta(days=7):
                         if attr < today:
-                            mailBody += f"UWAGA, w {car.nazwa_auta} upłynął czas {desc}: {attr} \n"
+                            mailBody += f"UWAGA, w {car.nazwa_auta} upłynął czas {desc}: {attr} \n\n\n"
                             #send_email(f"UWAGA, upłynął czas {desc}", f"UWAGA, upłynął czas {desc}: {attr}")
                         else:
-                            mailBody += f"Do 7 dni, w {car.nazwa_auta} upływa czas {desc}: {attr} \n"
+                            mailBody += f"Do 7 dni, w {car.nazwa_auta} upływa czas {desc}: {attr} \n\n\n"
                             #send_email(f"Do 7 dni upływa czas {desc}", f"Do 7 dni upływa czas {desc}: {attr}")
                     elif attr <= today + timedelta(days=30):
-                        mailBody += f"W {car.nazwa_auta} zbliża się termin {desc}: {attr} \n"
+                        mailBody += f"W {car.nazwa_auta} zbliża się termin {desc}: {attr} \n\n\n"
                         #send_email(f"Zbliża się termin {desc}", f"Zbliża się termin {desc}: {attr}")
 
                 # Sprawdzanie przebiegu
                 if car.kilometry_wymiany_oleju - car.aktualny_przebieg <= 1000:
                     if car.aktualny_przebieg >= car.kilometry_wymiany_oleju:
-                        mailBody += f"UWAGA, w {car.nazwa_auta} upłynął czas wymiany oleju przy przebiegu: {car.kilometry_wymiany_oleju} \n"
+                        mailBody += f"UWAGA, w {car.nazwa_auta} upłynął czas wymiany oleju przy przebiegu: {car.kilometry_wymiany_oleju} \n\n\n"
                         #send_email("UWAGA, upłynął czas wymiany oleju", f"UWAGA, upłynął czas wymiany oleju przy przebiegu: {car.kilometry_wymiany_oleju}")
                     else:
-                        mailBody += f"W {car.nazwa_auta} zbliża się czas wymiany oleju przy przebiegu: {car.kilometry_wymiany_oleju} \n"
+                        mailBody += f"W {car.nazwa_auta} zbliża się czas wymiany oleju przy przebiegu: {car.kilometry_wymiany_oleju} \n\n\n"
                         #send_email("Zbliża się czas wymiany oleju", f"Zbliża się czas wymiany oleju przy przebiegu: {car.kilometry_wymiany_oleju}")
 
             if not mailBody:
@@ -181,11 +186,11 @@ def check_task_conditions_and_send_email(user_id: int=None):
             for task in tasks:
                 if task.task_date <= today + timedelta(days=7):
                     if task.task_date <= today:
-                        mailBody += f"!!!UWAGA czas sprawy: {task.task_name} skończył się w dniu: {task.task_date}!!! \n"
+                        mailBody += f"!!!UWAGA czas sprawy: {task.task_name} skończył się w dniu: {task.task_date}!!! \n\n\n"
                     else:
-                        mailBody += f"Czas sprawy: {task.task_name} skończy się do 7 dni, w dniu: {task.task_date}!!! \n"
+                        mailBody += f"Czas sprawy: {task.task_name} skończy się do 7 dni, w dniu: {task.task_date}!!! \n\n\n"
                 elif task.task_date <= today + timedelta(days=30):
-                    mailBody += f"Czas sprawy: {task.task_name} skończy się do miesiąca, w dniu: {task.task_date}!!! \n"
+                    mailBody += f"Czas sprawy: {task.task_name} skończy się do miesiąca, w dniu: {task.task_date}!!! \n\n\n"
             
             if not mailBody:
                 mailBody += f"Na dziś: {today}, nie masz żadnych ważnych spraw."
@@ -216,6 +221,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
+            log_event(f"Zalogowal sie uzytkownik: {current_user.username}.")
             return redirect(url_for('manage'))
         else:
             flash('Nieprawidłowa nazwa użytkownika lub hasło.')
@@ -224,6 +230,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    log_event(f"Wylogowal sie uzytkownik: {current_user.username}.")
     logout_user()
     return redirect(url_for('login'))
 
@@ -416,4 +423,5 @@ app.jinja_env.filters['get_mileage_color'] = get_mileage_color
 #     db.session.commit()
 
 if __name__ == '__main__':
+    restart = False
     app.run(debug=True)

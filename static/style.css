@@ -7,3 +7,50 @@
 .red {
     background-color: red !important;
 }
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+.navbar.dark-mode {
+    background-color: #222 !important;
+}
+/* Domyślne style tabeli */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px; /* Normalny rozmiar czcionki */
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 12px; /* Mniejsza czcionka na telefonach */
+        margin: 0; /* Usunięcie marginesów */
+    }
+
+    /* Jeśli tabela jest wewnątrz div.container lub div.row */
+    .container, .row {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* Styl dla ciemnego motywu */
+body.dark-mode table {
+    color: white; /* Zmiana koloru tekstu na biały */
+}
+
+/* Opcjonalnie: poprawa wyglądu nagłówków tabel */
+body.dark-mode th {
+    background-color: #333; /* Ciemniejsze tło nagłówków */
+    color: white;
+}
+
+/* Opcjonalnie: poprawa wyglądu wierszy */
+body.dark-mode tr:nth-child(even) {
+    background-color: #222; /* Ciemniejsze tło dla parzystych wierszy */
+}
+body.dark-mode tr:nth-child(odd) {
+    background-color: #2a2a2a; /* Trochę jaśniejsze tło dla nieparzystych */
+}

@@ -1,40 +1,19 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista pojazdów</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">  
-</head>
-<body>
-    <div class="text-end mt-3" style="margin-right: 5%;">
-        {% if current_user.is_authenticated %}
-            <a>Logged as: {{current_user.username}}!</a>
-        {% else %}
-            <a>User not logged -> Please Login or contact Administrator</a>
-        {% endif %}
-    </div>
+{% extends "base.html" %}
+
+<title>{% block title %}Flota Pojazdów{% endblock %}</title>
+
+{% block content %}
     <div class="container mt-5">
         <h1 class="text-center">Lista pojazdów</h1>
-        {% if current_user.is_authenticated %}
-            <a href="/manage" class="btn btn-primary mb-3">Zarządzaj pojazdami</a>
-            <a href="/tasks" class="btn btn-secondary mb-3">Sprawy</a>
-            <a href="/logout" class="btn btn-danger mb-3">Logout</a>
-        {% else %}
-            <a href="/tasks" class="btn btn-secondary mb-3">Sprawy</a>
-            <a href="/login" class="btn btn-warning mb-3">Login</a>
-        {% endif %}
         <table class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th>Nazwa Auta</th>
-                    <th>Data Ubezpieczenia</th>
-                    <th>Data Przeglądu</th>
-                    <th>Data Wymiany Oleju</th>
-                    <th>Kilometry Wymiany Oleju</th>
-                    <th>Aktualny Przebieg</th>
+                    <th>Pojazd</th>
+                    <th>OC</th>
+                    <th>PRZEGLAD</th>
+                    <th>OLEJ</th>
+                    <th>OLEJ [km]</th>
+                    <th>[km]</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,5 +30,4 @@
             </tbody>
         </table>
     </div>
-</body>
-</html>
+{% endblock %}
