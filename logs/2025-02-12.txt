@@ -1,0 +1,4 @@
+2025-02-12 07:53:57.463746: -> Aplikacja zostala zrestartowana lub uruchomiona..
+2025-02-12 07:53:57.990561: -> Aplikacja zostala zrestartowana lub uruchomiona..
+2025-02-12 07:54:37.673341: -> Zalogowal sie uzytkownik: macintec..
+2025-02-12 07:55:37.861423: -> Wylogowal sie uzytkownik: macintec..
