@@ -22,6 +22,7 @@
                         <li class="nav-item"><a class="nav-link" href="/">Lista pojazdów</a></li>
                         <li class="nav-item"><a class="nav-link" href="/manage">Zarządzaj pojazdami</a></li>
                         <li class="nav-item"><a class="nav-link" href="/manage_tasks">Zarządzaj sprawami</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/manage_user">Zarządzaj użytkownikiem</a></li>
                         {% if current_user.id == 2 %}
                             <li class="nav-item"><a class="nav-link" href="/register">Dodaj Użytkownika</a></li>
                         {% endif %}
@@ -55,6 +56,12 @@
     </nav>
     
     <div class="container mt-4">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" tabindex="-1">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
         {% block content %}{% endblock %}
     </div>
 

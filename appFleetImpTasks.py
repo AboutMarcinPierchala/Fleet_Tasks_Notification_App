@@ -418,7 +418,7 @@ def update_password(id):
         else:
             user_to_edit = User.query.get_or_404(user_id)
         if user_to_edit and not check_password_hash(user_to_edit.password, old_password):
-            flash('Podane hasło do zmiany nie jezt zgodne z istniejącym')
+            flash('Podane hasło do zmiany nie jest zgodne z istniejącym')
             return render_template('update_password.html', id = user_to_edit.id)
         if password_1 != password_2:
             flash('Wpisane hasła nie są identyczne')

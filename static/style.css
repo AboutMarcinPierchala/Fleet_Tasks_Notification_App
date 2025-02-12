@@ -18,11 +18,12 @@ body.dark-mode {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 16px; /* Normalny rozmiar czcionki */
+    font-size: 14px; /* Normalny rozmiar czcionki */
 }
 
-@media screen and (max-width: 768px) {
-    table {
+@media screen and (max-width: 500px) {
+    table {        
+        width: 100%;
         font-size: 12px; /* Mniejsza czcionka na telefonach */
         margin: 0; /* Usunięcie marginesów */
     }
@@ -53,4 +54,23 @@ body.dark-mode tr:nth-child(even) {
 }
 body.dark-mode tr:nth-child(odd) {
     background-color: #2a2a2a; /* Trochę jaśniejsze tło dla nieparzystych */
+}
+
+.password-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.password-container input {
+    width: 100%;
+    padding-right: 40px; /* Miejsce na ikonę */
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
 }
