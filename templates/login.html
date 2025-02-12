@@ -3,18 +3,29 @@
 <title>{% block title %}Login{% endblock %}</title>
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">Logowanie</h1>
-        <form method="POST" action="/login" class="mt-3">
-            <div class="mb-3">
-                <label for="username" class="form-label">Nazwa użytkownika</label>
-                <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Hasło</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Zaloguj</button>
-        </form>
-    </div>
+<div class="container mt-5">
+    <h1 class="text-center">Logowanie</h1>
+    <form method="POST" action="/login" class="mt-3">
+        <div class="field_container">
+            <label for="username" class="form-label">Nazwa użytkownika</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="password-container">
+            <label for="password" class="form-label">Hasło</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+            <button type="button" class="toggle-password" onclick="togglePassword(this)">
+                👁️
+            </button>
+        </div>
+        <div class="confirm_buttons">
+            <button type="submit" class="btn btn-primary">Zaloguj</button>                
+        </div>
+    </form>
+</div>
+<script>
+    function togglePassword(button) {
+        let passwordInput = button.previousElementSibling;
+        passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    }
+</script>
 {% endblock %}

@@ -35,6 +35,11 @@ table {
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
+
+    .field_container, .confirm_buttons, .password-container{
+        margin-left: 10px;
+        padding-left: 10px;
+    }
 }
 
 /* Styl dla ciemnego motywu */
@@ -56,21 +61,53 @@ body.dark-mode tr:nth-child(odd) {
     background-color: #2a2a2a; /* Trochę jaśniejsze tło dla nieparzystych */
 }
 
-.password-container {
+.field_container {
+    margin-left: 1%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;    
+    flex-direction: column;
+    width: 400px;
+    display: flex;
+    flex-direction: column; /* Ustawienie labelki nad inputem */
+    gap: 5px; /* Odstęp między labelką a inputem */
+}
+
+.confirm_buttons {
     position: relative;
-    display: inline-block;
-    width: 100%;
+    margin-left: 1%;
+    
+}
+
+.password-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 1%;
+    position: relative;
+    width: 400px;
+    display: flex;
+    flex-direction: column; /* Ustawienie labelki nad inputem */
+    gap: 5px; /* Odstęp między labelką a inputem */
 }
 .password-container input {
     width: 100%;
     padding-right: 40px; /* Miejsce na ikonę */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
 .toggle-password {
     position: absolute;
     right: 10px;
-    top: 50%;
+    top:70%;
     transform: translateY(-50%);
-    cursor: pointer;
     background: none;
     border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #777;
+}
+.toggle-password:hover {
+    color: #333;
 }

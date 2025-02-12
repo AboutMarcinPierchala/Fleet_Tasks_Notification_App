@@ -2,41 +2,43 @@
 
 <title>{% block title %}Zarządzaj Sprawami{% endblock %}</title>
 
-{% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">Zarządzanie sprawami</h1>
-        <form method="POST" action="/add_task" class="mb-3">
-            <div class="mb-3">
-                <label for="task_name" class="form-label">Nazwa Sprawy</label>
-                <input type="text" class="form-control" id="task_name" name="task_name" required>
-            </div>
-            <div class="mb-3">
-                <label for="task_date" class="form-label">Data Sprawy</label>
-                <input type="date" class="form-control" id="task_date" name="task_date" required>
-            </div>
-            <button type="submit" class="btn btn-success">Dodaj Sprawę</button>
-            <a href="/send_task_notification" class="btn btn-warning mb-3 mt-3">Wyślij maila</a>
-            <a href="/tasks" class="btn btn-secondary mb-3 mt-3">Powrót</a>
-        </form>
-        <h2>Istniejące sprawy</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nazwa Sprawy</th>
-                    <th>Akcje</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for task in important_tasks %}
-                <tr>
-                    <td>{{ task.task_name }}</td>
-                    <td>
-                        <a href="/edit_task/{{ task.id }}" class="btn btn-warning btn-sm">Edytuj</a>
-                        <a href="/delete_task/{{ task.id }}" class="btn btn-danger btn-sm">Usuń</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+{% block content %}    
+<h1 class="text-center">Zarządzanie sprawami</h1>
+<form method="POST" action="/add_task" class="mb-3">
+    <div class="field_container">
+        <label for="task_name" class="form-label">Nazwa Sprawy</label>
+        <input type="text" class="form-control" id="task_name" name="task_name" required>
     </div>
+    <div class="field_container">
+        <label for="task_date" class="form-label">Data Sprawy</label>
+        <input type="date" class="form-control" id="task_date" name="task_date" required>
+    </div>
+    <div class="confirm_buttons">
+        <button type="submit" class="btn btn-success">Dodaj Sprawę</button>
+        <a href="/send_task_notification" class="btn btn-warning mb-3 mt-3">Wyślij maila</a>
+        <a href="/tasks" class="btn btn-secondary mb-3 mt-3">Powrót</a>                
+    </div>
+</form>
+<div class="container mt-5"></div>
+    <h2>Istniejące sprawy</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nazwa Sprawy</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in important_tasks %}
+            <tr>
+                <td>{{ task.task_name }}</td>
+                <td>
+                    <a href="/edit_task/{{ task.id }}" class="btn btn-warning btn-sm">Edytuj</a>
+                    <a href="/delete_task/{{ task.id }}" class="btn btn-danger btn-sm">Usuń</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
