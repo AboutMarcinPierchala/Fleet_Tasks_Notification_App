@@ -52,28 +52,28 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-def UserInputValidate(user: User):
+def UserInputValidate(user: User, url:str):
     if not user.username or not user.username.strip():
             flash('User name cannot be empty od spaces')
-            return redirect(url_for('register'))
+            return redirect(url_for(url))
 
     email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     if not user.email or not re.match(email_pattern, user.email):
         flash('Enter a valid email address')
-        return redirect(url_for('register'))
+        return redirect(url_for(url))
 
     users = User.query.all()
 
     for userValid in users:
         if userValid.username == user.username and userValid.email == user.email:
             flash('This account already exists')
-            return redirect(url_for('register'))            
+            return redirect(url_for(url))            
         elif userValid.username == user.username:
             flash('This nick already exists') 
-            return redirect(url_for('register'))           
+            return redirect(url_for(url))           
         elif userValid.email == user.email:
             flash('This email already exists') 
-            return redirect(url_for('register'))   
+            return redirect(url_for(url))   
     return user
 
 def get_color(date):
@@ -248,7 +248,7 @@ def register():
             return redirect(url_for('register'))
 
         new_user = User(username=username, password=hashed_password, email=email)
-        UserInputValidate(new_user)
+        UserInputValidate(new_user, 'register')
         db.session.add(new_user)
         db.session.commit()
         flash('Konto zostało utworzone. Możesz się teraz zalogować.')
@@ -373,6 +373,62 @@ def delete_task(id):
     db.session.commit()
     flash(f"Sprawa {important_task.task_name} została pomyślnie usunięta.")
     return redirect(url_for('manage_tasks'))
+
+@app.route('/manage_user')
+@login_required
+def manage_user():
+    user_id = current_user.id
+    if user_id == 2 :
+        users_list = User.query.all()
+    else:
+        users_list = User.query.filter_by(id = user_id).all()
+    return render_template('manage_user.html', users_list = users_list)
+
+@app.route('/edit_user/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_user(id):
+    user_to_edit = User.query.get_or_404(id)
+    users = User.query.all()
+    if request.method == 'POST':
+        user_to_edit.username = request.form['username']
+        user_to_edit.email = request.form['email']
+        for user in users:
+            if user_to_edit.username == user.username and user_to_edit.id != user.id:
+                flash('Podany Użytkownik jż istnieje - zmień nazwę użytkownika na inną!')
+                return render_template('edit_user.html',user_to_edit = user_to_edit)
+            if user_to_edit.email == user.email and user_to_edit.id != user.id:
+                flash('Podany email jż istnieje - zmień email na inny!')
+                return render_template('edit_user.html',user_to_edit = user_to_edit)
+        db.session.commit()
+        flash(f'Dane użytkwonika {user_to_edit.username} zostały zmienione.')
+        return redirect(url_for('manage_user'))
+
+    return render_template('edit_user.html',user_to_edit = user_to_edit)
+
+@app.route('/update_password/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_password(id):
+    if request.method == 'POST':
+        old_password = request.form['old_pasword']
+        password_1 = request.form['pasword_1']
+        password_2 = request.form['pasword_2']
+        user_id = current_user.id
+        if user_id == 2:
+            user_to_edit = User.query.get_or_404(id)
+        else:
+            user_to_edit = User.query.get_or_404(user_id)
+        if user_to_edit and not check_password_hash(user_to_edit.password, old_password):
+            flash('Podane hasło do zmiany nie jezt zgodne z istniejącym')
+            return render_template('update_password.html', id = user_to_edit.id)
+        if password_1 != password_2:
+            flash('Wpisane hasła nie są identyczne')
+            return render_template('update_password.html', id = user_to_edit.id)
+        user_to_edit.password = generate_password_hash(password_2, method='pbkdf2:sha256')
+        db.session.commit()
+        
+        flash('Twoje hasło zostało zmienione.')
+        return redirect(url_for('manage_user'))
+    return render_template('update_password.html', id = id)
 
 @app.route('/send_notification')
 @login_required

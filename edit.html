@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Edytuj dane pojazdu{% endblock %}</title>
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">Edytuj pojazd</h1>
+        <form method="POST" action="/edit/{{ car.id }}">
+            <div class="mb-3">
+                <label for="nazwa_auta" class="form-label">Nazwa Auta</label>
+                <input type="text" class="form-control" id="nazwa_auta" name="nazwa_auta" value="{{ car.nazwa_auta }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_ubezpieczenia" class="form-label">Data Ubezpieczenia</label>
+                <input type="date" class="form-control" id="data_ubezpieczenia" name="data_ubezpieczenia" value="{{ car.data_ubezpieczenia }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_przegladu" class="form-label">Data Przeglądu</label>
+                <input type="date" class="form-control" id="data_przegladu" name="data_przegladu" value="{{ car.data_przegladu }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_wymiany_oleju" class="form-label">Data Wymiany Oleju</label>
+                <input type="date" class="form-control" id="data_wymiany_oleju" name="data_wymiany_oleju" value="{{ car.data_wymiany_oleju }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="kilometry_wymiany_oleju" class="form-label">Kilometry Wymiany Oleju</label>
+                <input type="number" class="form-control" id="kilometry_wymiany_oleju" name="kilometry_wymiany_oleju" value="{{ car.kilometry_wymiany_oleju }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="aktualny_przebieg" class="form-label">Aktualny Przebieg</label>
+                <input type="number" class="form-control" id="aktualny_przebieg" name="aktualny_przebieg" value="{{ car.aktualny_przebieg }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Zapisz zmiany</button>
+            <a href="/manage" class="btn btn-secondary mb-3 mt-3">Powrót</a>
+        </form>
+    </div>
+{% endblock %}

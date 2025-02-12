@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Edytuj sprawę{% endblock %}</title>
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">Edytuj sprawę</h1>
+        <form method="POST" action="/edit_task/{{ important_task.id }}">
+            <div class="mb-3">
+                <label for="task_name" class="form-label">Nazwa Sprawy</label>
+                <input type="text" class="form-control" id="task_name" name="task_name" value="{{ important_task.task_name }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="task_date" class="form-label">Data Sprawy</label>
+                <input type="date" class="form-control" id="task_date" name="task_date" value="{{ important_task.task_date }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Zapisz zmiany</button>            
+            <a href="/manage_tasks" class="btn btn-secondary mb-3 mt-3">Powrót</a>
+        </form>
+    </div>
+{% endblock %}

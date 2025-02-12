@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Flota Pojazdów{% endblock %}</title>
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">Lista pojazdów</h1>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Pojazd</th>
+                    <th>OC</th>
+                    <th>PRZEGLAD</th>
+                    <th>OLEJ</th>
+                    <th>OLEJ [km]</th>
+                    <th>[km]</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car in cars %}
+                <tr>
+                    <td>{{ car.nazwa_auta }}</td>
+                    <td class="{{ car.data_ubezpieczenia|get_color }}">{{ car.data_ubezpieczenia }}</td>
+                    <td class="{{ car.data_przegladu|get_color }}">{{ car.data_przegladu }}</td>
+                    <td class="{{ car.data_wymiany_oleju|get_color }}">{{ car.data_wymiany_oleju }}</td>
+                    <td class="{{ car.kilometry_wymiany_oleju|get_mileage_color(car.aktualny_przebieg) }}">{{ car.kilometry_wymiany_oleju }}</td>
+                    <td>{{ car.aktualny_przebieg }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

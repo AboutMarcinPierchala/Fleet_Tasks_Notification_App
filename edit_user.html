@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Edycja Danych Użytkownika{% endblock %}</title>
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">Edycja Danych Użytkownika</h1>
+        <form method="POST" action="/edit_user/{{ user_to_edit.id}}" class="mt-3">
+            <div class="mb-3">
+                <label for="username" class="form-label">Nazwa użytkownika</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ user_to_edit.username }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ user_to_edit.email }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            <a href="/manage_user" class="btn btn-secondary mb-3 mt-3">Powrót</a>
+        </form>
+    </div>
+{% endblock %}
