@@ -67,7 +67,7 @@ body.dark-mode tr:nth-child(odd) {
     margin-bottom: 10px;
     position: relative;    
     flex-direction: column;
-    width: 400px;
+    width: 350px;
     display: flex;
     flex-direction: column; /* Ustawienie labelki nad inputem */
     gap: 5px; /* Odstęp między labelką a inputem */
@@ -84,7 +84,7 @@ body.dark-mode tr:nth-child(odd) {
     margin-bottom: 10px;
     margin-left: 1%;
     position: relative;
-    width: 400px;
+    width: 350px;
     display: flex;
     flex-direction: column; /* Ustawienie labelki nad inputem */
     gap: 5px; /* Odstęp między labelką a inputem */
