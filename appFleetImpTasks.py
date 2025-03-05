@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -259,6 +259,8 @@ def register():
 @app.route('/manage')
 @login_required
 def manage():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     user_id = current_user.id
     if user_id == 2 :
         cars = Car.query.all()
@@ -269,6 +271,8 @@ def manage():
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         nazwa_auta = request.form['nazwa_auta']
         data_ubezpieczenia = request.form['data_ubezpieczenia']
@@ -297,6 +301,8 @@ def add():
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     car = Car.query.get_or_404(id)
 
     if request.method == 'POST':
@@ -324,6 +330,8 @@ def delete(id):
 @app.route('/manage_tasks')
 @login_required
 def manage_tasks():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     user_id = current_user.id
     if user_id == 2 :
         important_tasks = Important_task.query.all()
@@ -334,6 +342,8 @@ def manage_tasks():
 @app.route('/add_task', methods=['GET', 'POST'])
 @login_required
 def add_task():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         task_name = request.form['task_name']
         task_date = request.form['task_date']
@@ -354,6 +364,8 @@ def add_task():
 @app.route('/edit_task/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_task(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     important_task = Important_task.query.get_or_404(id)
 
     if request.method == 'POST':
@@ -377,6 +389,8 @@ def delete_task(id):
 @app.route('/manage_user')
 @login_required
 def manage_user():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     user_id = current_user.id
     if user_id == 2 :
         users_list = User.query.all()
@@ -387,6 +401,8 @@ def manage_user():
 @app.route('/edit_user/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     user_to_edit = User.query.get_or_404(id)
     users = User.query.all()
     if request.method == 'POST':
@@ -443,6 +459,13 @@ def send_task_notification():
     job_2()
     flash(f"Mail został wysłany.")
     return redirect(url_for('manage_tasks'))
+
+@app.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 def job_1():
     user_id = current_user.id if current_user else None
