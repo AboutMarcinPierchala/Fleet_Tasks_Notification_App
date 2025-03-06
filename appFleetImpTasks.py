@@ -424,6 +424,8 @@ def edit_user(id):
 @app.route('/update_password/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_password(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         old_password = request.form['old_pasword']
         password_1 = request.form['pasword_1']
