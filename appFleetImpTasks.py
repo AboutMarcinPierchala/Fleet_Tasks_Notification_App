@@ -410,7 +410,7 @@ def edit_user(id):
         user_to_edit.email = request.form['email']
         for user in users:
             if user_to_edit.username == user.username and user_to_edit.id != user.id:
-                flash('Podany Użytkownik jż istnieje - zmień nazwę użytkownika na inną!')
+                flash('Podany Użytkownik już istnieje - zmień nazwę użytkownika na inną!')
                 return render_template('edit_user.html',user_to_edit = user_to_edit)
             if user_to_edit.email == user.email and user_to_edit.id != user.id:
                 flash('Podany email jż istnieje - zmień email na inny!')
@@ -420,6 +420,15 @@ def edit_user(id):
         return redirect(url_for('manage_user'))
 
     return render_template('edit_user.html',user_to_edit = user_to_edit)
+
+@app.route('/delete_user/<int:id>')
+@login_required
+def delete_user(id):
+    user_to_del = User.query.get_or_404(id)
+    db.session.delete(user_to_del)
+    db.session.commit()
+    flash(f"Użtkownik {user_to_del.username} został pomyślnie usunięty.")
+    return redirect(url_for('manage_user'))
 
 @app.route('/update_password/<int:id>', methods=['GET', 'POST'])
 @login_required
