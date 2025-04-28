@@ -490,8 +490,8 @@ def job_2():
 
 # Scheduler
 scheduler = BackgroundScheduler()
-scheduler.add_job(job_1, trigger="cron", hour=7, minute=17)
-scheduler.add_job(job_2, trigger="cron", hour=7, minute=18)
+scheduler.add_job(job_1, trigger="cron", hour=8, minute=17)
+scheduler.add_job(job_2, trigger="cron", hour=8, minute=18)
 scheduler.start()    
 
 # Rejestrowanie funkcji jako filtry Jinja
