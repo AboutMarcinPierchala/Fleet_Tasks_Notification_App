@@ -1,4 +1,4 @@
-from app import job_2, job_1
+from appFleetImpTasks import job_2, job_1
 from logevent import log_event
 
 try:
