@@ -54,25 +54,25 @@ def load_user(user_id):
 
 def UserInputValidate(user: User, url:str):
     if not user.username or not user.username.strip():
-            flash('User name cannot be empty od spaces')
+            flash('User name cannot be empty od spaces', 'warning')
             return redirect(url_for(url))
 
     email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     if not user.email or not re.match(email_pattern, user.email):
-        flash('Enter a valid email address')
+        flash('Enter a valid email address', 'warning')
         return redirect(url_for(url))
 
     users = User.query.all()
 
     for userValid in users:
         if userValid.username == user.username and userValid.email == user.email:
-            flash('This account already exists')
+            flash('This account already exists', 'warning')
             return redirect(url_for(url))            
         elif userValid.username == user.username:
-            flash('This nick already exists') 
+            flash('This nick already exists', 'warning') 
             return redirect(url_for(url))           
         elif userValid.email == user.email:
-            flash('This email already exists') 
+            flash('This email already exists', 'warning') 
             return redirect(url_for(url))   
     return user
 
@@ -224,7 +224,7 @@ def login():
             log_event(f"Zalogowal sie uzytkownik: {current_user.username}.")
             return redirect(url_for('manage'))
         else:
-            flash('Nieprawidłowa nazwa użytkownika lub hasło.')
+            flash('Nieprawidłowa nazwa użytkownika lub hasło.', 'warning')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -244,14 +244,14 @@ def register():
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
         if User.query.filter_by(username=username).first():
-            flash('Użytkownik o takiej nazwie już istnieje.')
+            flash('Użytkownik o takiej nazwie już istnieje.', 'warning')
             return redirect(url_for('register'))
 
         new_user = User(username=username, password=hashed_password, email=email)
         UserInputValidate(new_user, 'register')
         db.session.add(new_user)
         db.session.commit()
-        flash('Konto zostało utworzone. Możesz się teraz zalogować.')
+        flash('Konto zostało utworzone. Możesz się teraz zalogować.', 'success')
         return redirect(url_for('login'))
 
     return render_template('register.html', current_user = current_user)
@@ -293,7 +293,7 @@ def add():
 
         db.session.add(new_car)
         db.session.commit()
-        flash(f"Car {new_car.nazwa_auta} został pomyślnie dodany do bazy.")
+        flash(f"Car {new_car.nazwa_auta} został pomyślnie dodany do bazy.", 'success')
         return redirect(url_for('manage'))
 
     return render_template('add.html')
@@ -318,13 +318,13 @@ def edit(id):
 
     return render_template('edit.html', car=car, current_user = current_user)
 
-@app.route('/delete/<int:id>')
+@app.route('/delete/<int:id>', methods=['POST'])
 @login_required
 def delete(id):
     car = Car.query.get_or_404(id)
     db.session.delete(car)
     db.session.commit()
-    flash(f"Car {car.nazwa_auta} został pomyślnie usunięty.")
+    flash(f"Car {car.nazwa_auta} został pomyślnie usunięty.", 'success')
     return redirect(url_for('manage'))
 
 @app.route('/manage_tasks')
@@ -356,7 +356,7 @@ def add_task():
 
         db.session.add(new_task)
         db.session.commit()
-        flash(f"Sprawa: {new_task.task_name} została pomyślnie dodana do bazy.")
+        flash(f"Sprawa: {new_task.task_name} została pomyślnie dodana do bazy.", 'success')
         return redirect(url_for('manage_tasks'))
 
     return render_template('add_task.html')
@@ -377,13 +377,13 @@ def edit_task(id):
 
     return render_template('edit_task.html', important_task=important_task, current_user = current_user)
 
-@app.route('/delete_task/<int:id>')
+@app.route('/delete_task/<int:id>', methods=['POST'])
 @login_required
 def delete_task(id):
     important_task = Important_task.query.get_or_404(id)
     db.session.delete(important_task)
     db.session.commit()
-    flash(f"Sprawa {important_task.task_name} została pomyślnie usunięta.")
+    flash(f"Sprawa {important_task.task_name} została pomyślnie usunięta.", 'success')
     return redirect(url_for('manage_tasks'))
 
 @app.route('/manage_user')
@@ -410,24 +410,28 @@ def edit_user(id):
         user_to_edit.email = request.form['email']
         for user in users:
             if user_to_edit.username == user.username and user_to_edit.id != user.id:
-                flash('Podany Użytkownik już istnieje - zmień nazwę użytkownika na inną!')
+                flash('Podany Użytkownik już istnieje - zmień nazwę użytkownika na inną!', 'warning')
                 return render_template('edit_user.html',user_to_edit = user_to_edit)
             if user_to_edit.email == user.email and user_to_edit.id != user.id:
-                flash('Podany email jż istnieje - zmień email na inny!')
+                flash('Podany email jż istnieje - zmień email na inny!', 'warning')
                 return render_template('edit_user.html',user_to_edit = user_to_edit)
         db.session.commit()
-        flash(f'Dane użytkwonika {user_to_edit.username} zostały zmienione.')
+        flash(f'Dane użytkwonika {user_to_edit.username} zostały zmienione.', 'warning')
         return redirect(url_for('manage_user'))
 
     return render_template('edit_user.html',user_to_edit = user_to_edit)
 
-@app.route('/delete_user/<int:id>')
+@app.route('/delete_user/<int:id>', methods=['POST'])
 @login_required
 def delete_user(id):
     user_to_del = User.query.get_or_404(id)
-    db.session.delete(user_to_del)
-    db.session.commit()
-    flash(f"Użtkownik {user_to_del.username} został pomyślnie usunięty.")
+    try:
+        db.session.delete(user_to_del)
+        db.session.commit()
+        flash(f"Użytkownik {user_to_del.username} został pomyślnie usunięty.",'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Wystąpił problem z usunięciem użytkownika {user_to_del.username}",'danger')    
     return redirect(url_for('manage_user'))
 
 @app.route('/update_password/<int:id>', methods=['GET', 'POST'])
@@ -445,15 +449,15 @@ def update_password(id):
         else:
             user_to_edit = User.query.get_or_404(user_id)
         if user_to_edit and not check_password_hash(user_to_edit.password, old_password):
-            flash('Podane hasło do zmiany nie jest zgodne z istniejącym')
+            flash('Podane hasło do zmiany nie jest zgodne z istniejącym', 'warning')
             return render_template('update_password.html', id = user_to_edit.id)
         if password_1 != password_2:
-            flash('Wpisane hasła nie są identyczne')
+            flash('Wpisane hasła nie są identyczne', 'warning')
             return render_template('update_password.html', id = user_to_edit.id)
         user_to_edit.password = generate_password_hash(password_2, method='pbkdf2:sha256')
         db.session.commit()
         
-        flash('Twoje hasło zostało zmienione.')
+        flash('Twoje hasło zostało zmienione.', 'success')
         return redirect(url_for('manage_user'))
     return render_template('update_password.html', id = id)
 
@@ -461,14 +465,14 @@ def update_password(id):
 @login_required
 def send_notification():
     job_1()
-    flash(f"Mail został wysłany.")
+    flash(f"Mail został wysłany.", 'success')
     return redirect(url_for('manage'))
 
 @app.route('/send_task_notification')
 @login_required
 def send_task_notification():
     job_2()
-    flash(f"Mail został wysłany.")
+    flash(f"Mail został wysłany.", 'success')
     return redirect(url_for('manage_tasks'))
 
 @app.after_request

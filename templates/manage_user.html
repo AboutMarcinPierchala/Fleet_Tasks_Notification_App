@@ -19,7 +19,9 @@
                     <td>
                         <a href="/edit_user/{{ user.id }}" class="btn btn-warning btn-sm">Edytuj</a>
                         <a href="/update_password/{{ user.id }}" class="btn btn-warning btn-sm">Reset Hasła</a>
-                        <a href="/delete_user/{{ user.id }}" class="btn btn-danger btn-sm">Usuń</a>
+                        <form method="POST" action="{{ url_for('delete_user', id=user.id) }}" style="display: inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć ten obiekt?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}

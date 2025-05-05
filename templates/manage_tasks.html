@@ -34,7 +34,9 @@
                 <td>{{ task.task_name }}</td>
                 <td>
                     <a href="/edit_task/{{ task.id }}" class="btn btn-warning btn-sm">Edytuj</a>
-                    <a href="/delete_task/{{ task.id }}" class="btn btn-danger btn-sm">Usuń</a>
+                    <form method="POST" action="{{ url_for('delete_task', id=task.id) }}" style="display: inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć tą sprawę?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

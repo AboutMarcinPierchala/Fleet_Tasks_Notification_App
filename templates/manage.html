@@ -51,7 +51,9 @@
                 <td>{{ car.nazwa_auta }}</td>
                 <td>
                     <a href="/edit/{{ car.id }}" class="btn btn-warning btn-sm">Edytuj</a>
-                    <a href="/delete/{{ car.id }}" class="btn btn-danger btn-sm">Usuń</a>
+                    <form method="POST" action="{{ url_for('delete', id=car.id) }}" style="display: inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć to auto?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
