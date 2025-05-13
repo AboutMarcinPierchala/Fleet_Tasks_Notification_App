@@ -176,8 +176,7 @@ def check_task_conditions_and_send_email(user_id: int=None):
     
     for user in users:
         if user.id != 999:
-            if user.id==1000: task_owner_id=2
-            else: task_owner_id=user.id
+            task_owner_id=user.id 
             
             tasks = Important_task.query.filter_by(owner_id = task_owner_id).all()   
         
@@ -474,6 +473,14 @@ def send_task_notification():
     job_2()
     flash(f"Mail został wysłany.", 'success')
     return redirect(url_for('manage_tasks'))
+
+@app.route('/send_all_notifics')
+@login_required
+def send_all_notifics():
+    check_conditions_and_send_email()
+    check_task_conditions_and_send_email()
+    flash("Maile zostały wysłane",'success')
+    return redirect(url_for('index'))
 
 @app.after_request
 def add_no_cache_headers(response):
