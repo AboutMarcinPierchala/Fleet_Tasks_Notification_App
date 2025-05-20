@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Zawartość Logu{% endblock %}</title>
+
+{% block content %}
+    <a href="/max_log" class="btn btn-secondary mb-3 mt-3">Powrót</a>
+    <h1>Zawartość Logu: {{file}}</h1>
+    <pre style="white-space: pre-wrap; word-wrap: pre-word;">{{content}}</pre>
+    <a href="/max_log" class="btn btn-secondary mb-3 mt-3">Powrót</a>
+{% endblock %}

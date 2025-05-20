@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Lista Logów Aplikacji{% endblock %}</title>
+
+{% block content %}
+    <h1>Lista Logów Aplikacji</h1>
+    <ul>
+        {% for file in files %}
+            <li>
+                <a href="/view_log/{{file}}">{{file}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/manage" class="btn btn-secondary mb-3 mt-3">Powrót</a>
+{% endblock %}

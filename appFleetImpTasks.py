@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -12,6 +13,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import re
 
 restart = True
+
+LOG_PATH = "logs"
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fleet_management.db'
@@ -50,7 +53,7 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 def UserInputValidate(user: User, url:str):
     if not user.username or not user.username.strip():
@@ -459,6 +462,35 @@ def update_password(id):
         flash('Twoje hasło zostało zmienione.', 'success')
         return redirect(url_for('manage_user'))
     return render_template('update_password.html', id = id)
+
+@app.route('/max_log')
+@login_required
+def max_log():
+    if not os.path.exists(LOG_PATH):
+        return f"Katalog '{LOG_PATH}' nie istnieje.", 404
+    try:
+        log_list = sorted(os.listdir(LOG_PATH), reverse=True)
+        log_list = [f for f in log_list if f.endswith(".txt") and not f.startswith(".")]
+        return render_template("max_log.html", files=log_list)
+    except FileNotFoundError:
+        flash("Katalog logs nie został znaleziony",'warning')
+        return "Katalog logs nie został znaleziony", 404
+    
+@app.route('/view_log/<file>')
+@login_required
+def view_log(file):
+    log_path = os.path.join(LOG_PATH, file)
+    if not os.path.isfile(log_path):
+        abort(404)
+
+    try:
+        with open(log_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return render_template("view_log.html",file = file, content = content)
+    except Exception as e:
+        flash(f"Błąd podczas otwierania pliku: {str(e)}")
+        return f"Błąd podczas otwierania pliku: {str(e)}", 500
+        
 
 @app.route('/send_notification')
 @login_required
