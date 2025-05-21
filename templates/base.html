@@ -20,6 +20,7 @@
                     {% if current_user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="/tasks">Lista spraw</a></li>
                         <li class="nav-item"><a class="nav-link" href="/">Lista pojazdów</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/garbage_schedule">ŚMIECI 2025</a></li>
                         <li class="nav-item"><a class="nav-link" href="/manage">Zarządzaj pojazdami</a></li>
                         <li class="nav-item"><a class="nav-link" href="/manage_tasks">Zarządzaj sprawami</a></li>
                         <li class="nav-item"><a class="nav-link" href="/manage_user">Zarządzaj użytkownikiem</a></li>
@@ -31,6 +32,7 @@
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="/">Lista pojazdów</a></li>                    
                         <li class="nav-item"><a class="nav-link" href="/tasks">Lista spraw</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/garbage_schedule">ŚMIECI 2025</a></li>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav ms-auto">

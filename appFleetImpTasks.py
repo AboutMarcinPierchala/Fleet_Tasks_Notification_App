@@ -11,6 +11,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from apscheduler.schedulers.background import BackgroundScheduler
 import re
+from pdf_parser import extract_schedule
 
 restart = True
 
@@ -490,7 +491,12 @@ def view_log(file):
     except Exception as e:
         flash(f"Błąd podczas otwierania pliku: {str(e)}")
         return f"Błąd podczas otwierania pliku: {str(e)}", 500
-        
+
+@app.route('/garbage_schedule')   
+#@login_required
+def garbage():
+    #schedule = extract_schedule()
+    return render_template('garbage_schedule.html') 
 
 @app.route('/send_notification')
 @login_required
