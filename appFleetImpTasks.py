@@ -11,7 +11,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from apscheduler.schedulers.background import BackgroundScheduler
 import re
-from pdf_parser import extract_schedule
 
 restart = True
 
