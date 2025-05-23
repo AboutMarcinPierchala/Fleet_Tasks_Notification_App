@@ -495,7 +495,9 @@ def view_log(file):
 #@login_required
 def garbage():
     #schedule = extract_schedule()
-    return render_template('garbage_schedule.html') 
+    now = datetime.now()
+    date_time = now.strftime("%d-%m-%Y")
+    return render_template('garbage_schedule.html',date_time=date_time) 
 
 @app.route('/send_notification')
 @login_required
