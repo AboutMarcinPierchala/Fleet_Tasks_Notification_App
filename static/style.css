@@ -111,3 +111,8 @@ body.dark-mode tr:nth-child(odd) {
 .toggle-password:hover {
     color: #333;
 }
+
+.logs_list{
+    max-height: 500px;
+    overflow-x: auto;
+}
