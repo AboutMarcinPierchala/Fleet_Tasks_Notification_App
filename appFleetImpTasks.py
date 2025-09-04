@@ -50,6 +50,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(100), nullable=False)
+    notification_date = db.Column(db.Date)
+    notification_car_date = db.Column(db.Date)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -130,6 +132,7 @@ def check_conditions_and_send_email(user_id: int=None):
     today = datetime.today().date()
     
     for user in users:
+        if user.notification_car_date == today: return
         if user.id != 999:
             if user.id==1000: task_owner_id=2
             else: task_owner_id=user.id
@@ -166,6 +169,9 @@ def check_conditions_and_send_email(user_id: int=None):
             if not mailBody:
                 mailBody += f"Na dziś: {today}, z samochodami wszystko w porządku."
 
+            user.notification_car_date = today
+            db.session.commit()
+            
             send_email(f"Powiadomienie o stanie floty z dnia {today}", mailBody, user.email)
     
 
@@ -178,6 +184,7 @@ def check_task_conditions_and_send_email(user_id: int=None):
     today = datetime.today().date()
     
     for user in users:
+        if user.notification_date == today: return
         if user.id != 999:
             task_owner_id=user.id 
             
@@ -196,6 +203,9 @@ def check_task_conditions_and_send_email(user_id: int=None):
             
             if not mailBody:
                 mailBody += f"Na dziś: {today}, nie masz żadnych ważnych spraw."
+            
+            user.notification_date = today
+            db.session.commit()
             
             send_email(f"POWIADOMIENIE O TERMINACH WAŻNYCH SPRAW Z DNIA {today}", mailBody, user.email)
     
